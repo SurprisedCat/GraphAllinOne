@@ -39,7 +39,7 @@ int testGraphMatrix()
 	}
 	GraphAllInOne *pG = new GraphAllInOne(vexs,edges,'M');
 	pG->PrintGraph();
-//	pG->IteratorBFS();
+	pG->IteratorBFS();
 //	pG->IteratorDFS();
 //	pG->Prim('A');
 //	pG->Kruskal();
@@ -77,8 +77,8 @@ int testGraphLink()
 	}
 	GraphAllInOne *pG;
 	pG = new GraphAllInOne(vexs,edges,'L');
-	pG->PrintGraph();
-//	pG->IteratorBFS();
+//	pG->PrintGraph();
+	pG->IteratorBFS();
 //	pG->IteratorDFS();
 //	pG->Prim('A');
 //	pG->Kruskal();
@@ -89,8 +89,8 @@ int testGraphLink()
 }
 
 int main() {
-//	cout << "Graph All in One" << endl; // prints Graph All in One
-//	testGraphLink();
+	cout << "Graph All in One" << endl; // prints Graph All in One
+	testGraphLink();
 	testGraphMatrix();
 	return 0;
 }

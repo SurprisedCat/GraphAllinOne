@@ -111,7 +111,29 @@ using namespace std;
 		}
 		if(types == 'M')
 		{
-
+			for(int i = 0;i<mVexNum;i++)//遍历各个顶点
+			{
+				if(!visited[i])
+				{
+					q.push(i);
+					visited[i] = 1;
+					cout<<mVertex[i]<<" ";
+					while(!q.empty())
+					{
+						int qfront = q.front();
+						q.pop();
+						for(int j = 0;j<mVexNum;j++)
+						{
+							if(mMatrix[qfront][j] != INF && !visited[j])
+							{
+								q.push(j);
+								visited[j] = 1;
+								cout<<mVertex[j]<<" ";
+							}
+						}
+					}
+				}
+			}
 		}
 		cout<<endl;
 		return 1;
