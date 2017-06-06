@@ -59,7 +59,6 @@ using namespace std;
 			}
 			for(vector<EdgeData>::iterator it=edgesdata.begin();it!=edgesdata.end();it++)
 			{
-				cout<<getPosition(it->start)<<getPosition(it->end)<<endl;
 				mMatrix[getPosition(it->start)][getPosition(it->end)] = it->weight;
 				mMatrix[getPosition(it->end)][getPosition(it->start)] = it->weight;
 			}
@@ -460,29 +459,26 @@ using namespace std;
 		if(types=='M')
 		{
 			cout<<"Matrix Graph:"<<endl;
-			//printGraph(mMatrix, mVexNum);
+			cout<<setw(2)<<'M'<<" ";
+			for(int i = 0;i<mVexNum;i++)
+				cout<<setw(2)<<mVertex[i]<<" ";
+			cout<<endl;
+			for(int i=0;i<mVexNum;i++)
+			{
+				cout<<setw(2)<<mVertex[i]<<" ";
+				for(int j=0;j<mVexNum;j++)
+				{
+					if(mMatrix[i][j] != INF)
+						cout<<setw(2)<<mMatrix[i][j]<<" ";
+					else
+						cout<<setw(2)<<"N"<<" ";
+				}
+				cout<<endl;
+			}
+
 		}
 	}
 
-	void GraphAllInOne::printGraph(int vlen,int &M[vlen][vlen])
-	{
-		cout<<setw(2)<<'M'<<" ";
-		for(int i = 0;i<vlen;i++)
-			cout<<setw(2)<<mVertex[i]<<" ";
-		cout<<endl;
-		for(int i=0;i<vlen;i++)
-		{
-			cout<<setw(2)<<mVertex[i]<<" ";
-			for(int j=0;j<vlen;j++)
-			{
-				if(M[i][j] != INF)
-					cout<<setw(2)<<M[i][j]<<" ";
-				else
-					cout<<setw(2)<<"N"<<" ";
-			}
-			cout<<endl;
-		}
-	}
 	//通过节点内容寻找节点序号
 	int GraphAllInOne::getPosition(char ch)
 	{

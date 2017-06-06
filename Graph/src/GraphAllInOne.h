@@ -37,7 +37,6 @@ private:
 	bool isEdgesEnqueued(char start,char end,const char q[][2],int dimension1) const;//用在prim算法查看边是否已经入队
 	bool primIsRing(char s,char e,int *visited);
 	int getWeight(int start, int end);//用在Dijkstra算法中,获取两点间边的权值
-	void printGraph(int vlen,int &M[vlen][vlen]);
 public:
 	char types;//记录表明是邻接表还是矩阵
 
