@@ -153,6 +153,17 @@ using namespace std;
 				e = e->next;
 			}
 		}
+		if(types == 'M')
+		{
+			cout<<mVertex[index]<<" ";
+			visited[index] = 1;
+			for(int j=0;j<mVexNum;j++)
+			{
+				if(mMatrix[index][j]!=INF && !visited[j])
+					DFS(j,visited);
+			}
+
+		}
 	}
 	//深度优先遍历
 	int GraphAllInOne::IteratorDFS()
@@ -175,7 +186,11 @@ using namespace std;
 		}
 		if(types=='M')
 		{
-
+			for(int i=0;i<mVexNum;i++)
+			{
+				if(!visited[i])
+					DFS(i,visited);
+			}
 		}
 		cout<<endl;
 		return 1;
@@ -248,8 +263,36 @@ using namespace std;
 		}
 		if(types=='M')
 		{
-
-
+			int p = getPosition(v);
+			int visited[mVexNum];
+			memset(visited,0,sizeof(int)*mVexNum);
+			visited[p]=1;
+			priority_queue<EdgeData,vector<EdgeData>,less<EdgeData> > pq;
+			for(int i=0;i<mVexNum-1;i++)
+			{
+				cout<<i<<"-0";
+				for(int j=0;j<mVexNum;j++)
+				{
+					if((mMatrix[p][j]!= INF)&&(j!=p) &&(visited[j]!=1))
+						pq.push(EdgeData(mVertex[p],mVertex[j],mMatrix[p][j]));
+				}
+				cout<<i<<"-1";
+				bool flag = false;
+				while(!flag)
+				{
+					EdgeData smallest = pq.top();
+					pq.pop();
+					if(pq.empty())
+						flag = true;
+					if(visited[getPosition(smallest.start)] && visited[getPosition(smallest.end)])
+						continue;
+					flag = true;
+					result.push(smallest);
+					cout<<result.back().start<<"---"<<result.back().end<<"---"<<result.back().weight<<endl;
+					visited[getPosition(smallest.end)] = 1;
+				}
+			cout<<i<<"-2";
+			}
 		}
 		return result;
 	}

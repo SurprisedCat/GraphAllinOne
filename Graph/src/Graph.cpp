@@ -40,8 +40,8 @@ int testGraphMatrix()
 	GraphAllInOne *pG = new GraphAllInOne(vexs,edges,'M');
 	pG->PrintGraph();
 	pG->IteratorBFS();
-//	pG->IteratorDFS();
-//	pG->Prim('A');
+	pG->IteratorDFS();
+	pG->Prim('A');
 //	pG->Kruskal();
 //	pG->Dijkstra('D');
 //	pG->Floyd();
@@ -79,8 +79,8 @@ int testGraphLink()
 	pG = new GraphAllInOne(vexs,edges,'L');
 //	pG->PrintGraph();
 	pG->IteratorBFS();
-//	pG->IteratorDFS();
-//	pG->Prim('A');
+	pG->IteratorDFS();
+	pG->Prim('A');
 //	pG->Kruskal();
 //	pG->Dijkstra('D');
 //	pG->Floyd();
