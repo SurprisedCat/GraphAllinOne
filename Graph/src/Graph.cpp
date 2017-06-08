@@ -38,13 +38,13 @@ int testGraphMatrix()
 		edges[i]=e[i];
 	}
 	GraphAllInOne *pG = new GraphAllInOne(vexs,edges,'M');
-//	pG->PrintGraph();
-//	pG->IteratorBFS();
-//	pG->IteratorDFS();
-//	pG->Prim('A');
-//	pG->Kruskal();
+	pG->PrintGraph();
+	pG->IteratorBFS();
+	pG->IteratorDFS();
+	pG->Prim('A');
+	pG->Kruskal();
 	pG->Dijkstra('D');
-//	pG->Floyd();
+	pG->Floyd();
 	delete pG;
 	return 0;
 }
@@ -77,13 +77,13 @@ int testGraphLink()
 	}
 	GraphAllInOne *pG;
 	pG = new GraphAllInOne(vexs,edges,'L');
-//	pG->PrintGraph();
-//	pG->IteratorBFS();
-//	pG->IteratorDFS();
-//	pG->Prim('A');
-//	pG->Kruskal();
+	pG->PrintGraph();
+	pG->IteratorBFS();
+	pG->IteratorDFS();
+	pG->Prim('A');
+	pG->Kruskal();
 	pG->Dijkstra('D');
-//	pG->Floyd();
+	pG->Floyd();
 	delete pG;
 	return 0;
 }
