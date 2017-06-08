@@ -270,28 +270,27 @@ using namespace std;
 			priority_queue<EdgeData,vector<EdgeData>,less<EdgeData> > pq;
 			for(int i=0;i<mVexNum-1;i++)
 			{
-				cout<<i<<"-0";
 				for(int j=0;j<mVexNum;j++)
 				{
 					if((mMatrix[p][j]!= INF)&&(j!=p) &&(visited[j]!=1))
 						pq.push(EdgeData(mVertex[p],mVertex[j],mMatrix[p][j]));
 				}
-				cout<<i<<"-1";
 				bool flag = false;
+				EdgeData smallest;
 				while(!flag)
 				{
-					EdgeData smallest = pq.top();
+					smallest = pq.top();
 					pq.pop();
 					if(pq.empty())
 						flag = true;
 					if(visited[getPosition(smallest.start)] && visited[getPosition(smallest.end)])
 						continue;
 					flag = true;
-					result.push(smallest);
-					cout<<result.back().start<<"---"<<result.back().end<<"---"<<result.back().weight<<endl;
-					visited[getPosition(smallest.end)] = 1;
 				}
-			cout<<i<<"-2";
+				result.push(smallest);
+				cout<<result.back().start<<"---"<<result.back().end<<"---"<<result.back().weight<<endl;
+				p = getPosition(smallest.end);
+				visited[p] = 1;
 			}
 		}
 		return result;
@@ -300,9 +299,9 @@ using namespace std;
 	queue<EdgeData> GraphAllInOne::Kruskal()
 	{
 		queue<EdgeData> result;
+		cout<<"Kruskal:"<<endl;
 		if(types=='L')
 		{
-			cout<<"Kruskal:"<<endl;
 			//初始化并查集参数
 			UnionSet myUnion;
 			for(int i=0;i<mVexNum;i++)
@@ -349,7 +348,35 @@ using namespace std;
 		}
 		if(types=='M')
 		{
-
+			UnionSet myUnion;
+			//初始化并查集参数
+			for(int i=0;i<mVexNum;i++)
+				myUnion.makeSet(i);
+			//将所有的边放到一个优先级队列中
+			priority_queue<EdgeData,vector<EdgeData>,less<EdgeData> > pq;
+			for(int i=0;i<mVexNum;i++)
+				for(int j=i+1;j<mVexNum;j++)
+					if(mMatrix[i][j] != INF)
+						pq.push(EdgeData(mVertex[i],mVertex[j],mMatrix[i][j]));
+			for(int i=0;i<mVexNum-1;i++)//找到那些边
+			{
+				int flag = 0;//找到合适边的标记
+				EdgeData smallest;
+				while(!flag)
+				{
+					smallest = pq.top();
+					pq.pop();
+					int p1 = getPosition(smallest.start);
+					int p2 = getPosition(smallest.end);
+					if(myUnion.findSet(p1) == myUnion.findSet(p2))
+						continue;
+					flag = 1;//这条边合适
+					myUnion.myUnion(p1,p2);
+				}
+				//并查集
+				result.push(smallest);
+				cout<<result.back().start<<"---"<<result.back().end<<"---"<<result.back().weight<<endl;
+			}
 		}
 		return result;
 	}
@@ -381,7 +408,7 @@ using namespace std;
 		int prev[mVexNum];
 		for(int i=0;i<mVexNum;i++)
 			prev[i]=i;
-		//长度数组。即，dist[i]是"顶点vs"到"顶点i"的最短路径的长度。
+		//路径长度数组。即，dist[i]是"顶点vs"到"顶点i"的最短路径的长度。
 		int dist[mVexNum];
 		for(int i=0;i<mVexNum;i++)
 			dist[i] = INF;
@@ -443,7 +470,54 @@ using namespace std;
 		}
 		if(types=='M')
 		{
-
+			int p = getPosition(v);//找出顶点的位置
+			dist[p] = 0;//自身的距离是0
+			visited[p] = true;
+			//循环mVexNum次，每一次找出一个顶点
+			for(int i=0;i<mVexNum-1;i++)
+			{
+				int nextIndex = p;
+				int tempMin = INF;
+				for(int j=0;j<mVexNum;j++)
+				{
+					if(!visited[j])
+					{
+						int w = mMatrix[p][j];
+						int newDist = (w == INF? INF:(dist[p]+w));//放置w溢出，因为设置INF 为0x7fffffff
+						if(newDist<dist[j])//更新距离
+						{
+							dist[j]=newDist;
+							prev[j] = p;//这一轮找出的prev是p
+						}
+						if(tempMin>dist[j])
+						{
+							tempMin = dist[j];
+							nextIndex = j;
+						}
+					}
+				}
+				visited[nextIndex] = true;
+				p = nextIndex;
+			}
+			for(int i=0;i<mVexNum;i++)
+			{
+				cout<<"start with "<<v<<" to "<<mVertex[i]<<", distance is "<<dist[i]<<endl;
+				cout<<"The trace is:";
+				stack<char> outputDijkstra;
+				int traceIndex = i;
+				while(traceIndex != getPosition(v))
+				{
+					outputDijkstra.push(mVertex[traceIndex]);
+					traceIndex = prev[traceIndex];
+				}
+				outputDijkstra.push(v);
+				while(!outputDijkstra.empty())
+				{
+					cout<<outputDijkstra.top()<<" ";
+					outputDijkstra.pop();
+				}
+				cout<<endl;
+			}
 		}
 	}
 	//Floyd算法
@@ -499,7 +573,52 @@ using namespace std;
 		}
 		if(types=='M')
 		{
+			//floyd算法用邻接表很麻烦，所以生成矩阵
+			int dist[mVexNum][mVexNum];
+			int path[mVexNum][mVexNum];
 
+			for(int i=0;i<mVexNum;i++)
+			{
+				for(int j=0;j<mVexNum;j++)
+				{
+					dist[i][j] = mMatrix[i][j];
+					path[i][j] = j;//初始化路径表为j,"顶点i"到"顶点j"的最短路径是经过顶点j。
+				}
+			}
+			for(int k=0;k<mVexNum;k++)
+			{
+				for(int i=0;i<mVexNum;i++)
+				{
+					for(int j=0;j<mVexNum;j++)
+					{
+						// 如果经过下标为k顶点路径比原两点间路径更短，则更新dist[i][j]和path[i][j]
+						int tmp = (dist[i][k]==INF || dist[k][j]==INF) ? INF : (dist[i][k] + dist[k][j]);
+						if (dist[i][j] > tmp)
+					   {
+						   // "i到j最短路径"对应的值设，为更小的一个(即经过k)
+						   dist[i][j] = tmp;
+						   // "i到j最短路径"对应的路径，经过k
+						   path[i][j] = path[i][k];
+					   }
+					}
+				}
+			}
+			// 打印floyd最短路径的结果
+			cout << "floyd: " << endl;
+			cout<<"Weight: "<<endl;
+			for (int i = 0; i < mVexNum; i++)
+			{
+				for (int j = 0; j < mVexNum; j++)
+					cout << setw(2) << dist[i][j] << "  ";
+				cout << endl;
+			}
+			cout<<"Path: "<<endl;
+			for (int i = 0; i < mVexNum; i++)
+			{
+				for (int j = 0; j < mVexNum; j++)
+					cout << setw(2) << path[i][j] << "  ";
+				cout << endl;
+			}
 		}
 	}
 	//打印出图
